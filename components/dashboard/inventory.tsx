@@ -15,6 +15,7 @@ interface Location {
   column: string;
   position: string;
   level: string;
+  cases: number; // ✅ `cases` を必須にする
 }
 
 export function Inventory() {
@@ -80,8 +81,10 @@ export function Inventory() {
         location = {
           column: selectedInboundColumn,
           position: selectedInboundPosition,
-          level: selectedInboundLevel
+          level: selectedInboundLevel,
+          cases: 0 // ✅ `cases` をデフォルトで 0 にする
         };
+        
         cases = inboundCases;
         break;
 
@@ -99,7 +102,8 @@ export function Inventory() {
         location = {
           column: selectedOutboundColumn,
           position: selectedOutboundPosition,
-          level: selectedOutboundLevel
+          level: selectedOutboundLevel,
+          cases: 0
         };
         cases = outboundCases;
         break;
@@ -119,7 +123,8 @@ export function Inventory() {
         location = {
           column: selectedMoveFromColumn,
           position: selectedMoveFromPosition,
-          level: selectedMoveFromLevel
+          level: selectedMoveFromLevel,
+          cases: 0
         };
         cases = moveCases;
         break;
@@ -165,7 +170,7 @@ export function Inventory() {
         type: 'inbound',
         cases,
         quantity: cases * product.quantityPerCase,
-        toLocation: location
+        toLocation: { ...location, cases: location.cases ?? 0 }
       });
 
     } else if (type === 'outbound') {
@@ -209,8 +214,8 @@ export function Inventory() {
         type: 'outbound',
         cases,
         quantity: cases * product.quantityPerCase,
-        fromLocation: location,
-        toLocation: location
+        fromLocation: { ...location, cases: location.cases ?? 0 },
+        toLocation: { ...location, cases: location.cases ?? 0 }
       });
 
     } else if (type === 'move') {
@@ -274,7 +279,8 @@ export function Inventory() {
         toLocation: {
           column: selectedMoveToColumn,
           position: selectedMoveToPosition,
-          level: selectedMoveToLevel
+          level: selectedMoveToLevel,
+          cases: 0 // ✅ `cases` の初期値を追加
         }
       });
     }
